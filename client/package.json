@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-player": "^2.0.1",
     "react-scripts": "3.4.1",
     "socket.io": "^2.3.0",
     "uws": "^100.0.1"

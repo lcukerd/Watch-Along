@@ -4,7 +4,5 @@ import Player from './components/player'
 import openSocket from 'socket.io-client';
 
 const socket = openSocket('http://localhost:1997');
-socket.on('private', data => {
-  console.log(`Got a Secret message ${data}`);
-})
+socket.emit('register', { id: 23 });
 ReactDOM.render(<Player />, document.getElementById('root'));
