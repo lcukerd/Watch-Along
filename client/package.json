@@ -10,6 +10,7 @@
     "react-dom": "^16.13.1",
     "react-player": "^2.0.1",
     "react-scripts": "3.4.1",
+    "screenfull": "^5.0.2",
     "socket.io": "^2.3.0",
     "uws": "^100.0.1"
   },
