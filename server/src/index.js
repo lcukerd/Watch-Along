@@ -22,17 +22,30 @@ io.on('connection', socket => {
         if (!(id in connectedRooms)) {
             connectedRooms[id] = {};
         }
+        socket.emit('sync', connectedRooms[id]);
         console.log('Registered')
     });
 
+    // Actively sync player status
     socket.on('sync', msg => {
         const id = msg.id;
         delete msg.id;
         for (const key in msg) {
             connectedRooms[id][key] = msg[key];
         }
+        // Don't sync url here
+        delete connectedRooms[id].url;
         socket.to(`Room #${id}`).emit('sync', connectedRooms[id]);
     });
+
+    // Passively sync video url
+    socket.on('loadURL', msg => {
+        const id = msg.id;
+        connectedRooms[id].url = msg.url;
+        connectedRooms[id].playing = false;
+        connectedRooms[id].played = 0;
+        socket.to(`Room #${id}`).emit('sync', connectedRooms[id]);
+    })
 
     socket.on('disconnect', () => {
         console.log(`Disconnected with ${socket.id}`);
