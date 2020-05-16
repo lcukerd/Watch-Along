@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import ReactPlayer from 'react-player'
-import openSocket from 'socket.io-client';
+import io from 'socket.io-client';
 
 class Player extends Component {
-    socket = openSocket('http://localhost:1997');
+    socket = io();
     pullingSync = false;
     state = {
         id: 23,

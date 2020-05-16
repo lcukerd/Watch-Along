@@ -3,8 +3,9 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const path = require('path');
+const port = process.env.PORT || 5000;
 
-server.listen(1997);
+server.listen(port);
 let connectedRooms = {};
 
 if (process.env.NODE_ENV === 'production') {
