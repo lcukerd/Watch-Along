@@ -7,11 +7,11 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Server",
+            "name": "dev",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/server/src/index.js"
+            "program": "${workspaceFolder}/src/index.js"
         }
     ]
 }
