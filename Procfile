@@ -1,1 +1,1 @@
-web: node index.js && npm start --prefix client
+web: node ./src/index.js
