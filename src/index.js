@@ -6,9 +6,14 @@ const path = require('path');
 server.listen(1997);
 let connectedRooms = {};
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/public/index.html'));
-});
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/build')));
+    app.get('*', (req, res) => { res.sendfile(path.join(__dirname = '../client/build/index.html')); })
+} else {
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../client/public/index.html'));
+    });
+}
 
 io.on('connection', socket => {
     console.log('Got a new connection');
