@@ -41,6 +41,7 @@ io.on('connection', socket => {
         for (const key in msg) {
             connectedRooms[id][key] = msg[key];
         }
+        connectedRooms[id].ts = (new Date()).getTime();
         // Don't sync url here
         delete connectedRooms[id].url;
         socket.to(`Room #${id}`).emit('sync', connectedRooms[id]);
@@ -52,6 +53,7 @@ io.on('connection', socket => {
         connectedRooms[id].url = msg.url;
         connectedRooms[id].playing = false;
         connectedRooms[id].played = 0;
+        connectedRooms[id].ts = (new Date()).getTime();
         socket.to(`Room #${id}`).emit('sync', connectedRooms[id]);
     })
 

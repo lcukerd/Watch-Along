@@ -50,14 +50,12 @@ class Player extends Component {
             console.log(`Syncing URL ${this.state.url}`)
             this.socket.emit('loadURL', { id: this.state.id, url: this.state.url });
         }
-        else {
-            this.sync();
-        }
     }
 
     playerReady = () => {
         this.socket.on('sync', msg => {
             this.pullingSync = true;
+            msg.played = msg.played + ((((new Date()).getTime()) - msg.ts) / 1000)
             console.log(`Pulling sync ${msg.played} and ${msg.playing}`)
             if (Math.abs(this.state.played - msg.played) > 2) {
                 this.player.seekTo(parseFloat(msg.played))
