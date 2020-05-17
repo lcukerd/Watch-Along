@@ -4,8 +4,8 @@ import io from 'socket.io-client';
 
 // Todo:
 // * New joiners with changed URL not in sync
-// * Show room # and copy invite link
-// * Change app name and better UI
+// * Show other online room members
+
 class Player extends Component {
     socket = io();
     pullingSync = false;
@@ -73,11 +73,15 @@ class Player extends Component {
     render() {
         return (
             <div>
+                <h1 style={{ margin: '10px', 'text-align': 'center' }}>Watch Along</h1>
+                <h5 style={{ 'text-align': 'center' }}>{`Room #${this.state.id}`}</h5>
+                <h6 style={{ marginBottom: '20px', 'text-align': 'center' }}>Share this Room's # or the wepage's URL with friends to invite them over.</h6>
                 <div className='controls'>
                     <input ref={input => { this.urlInput = input }} type='text' defaultValue={this.state.url} size='100' />
                     <button onClick={() => this.setState({ url: this.urlInput.value, playing: false, played: 0 })}>Load</button>
                 </div>
-                <div className='player-wrapper'>
+                <div className='player-wrapper'
+                    style={{ margin: '10px' }}>
                     <ReactPlayer
                         className='react-player'
                         ref={this.ref}
