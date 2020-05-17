@@ -4,14 +4,13 @@ import io from 'socket.io-client';
 
 // Todo:
 // * New joiners with changed URL not in sync
-// * Add screen to create or join room
 // * Show room # and copy invite link
 // * Change app name and better UI
 class Player extends Component {
     socket = io();
     pullingSync = false;
     state = {
-        id: 23,
+        id: this.props.roomId,
         url: 'https://www.youtube.com/watch?v=vNXuvGK8Wzc',
         playing: false,
         played: 0,
@@ -68,7 +67,7 @@ class Player extends Component {
             }
             this.setState(msg)
         });
-        this.socket.emit('register', { id: 23 });
+        this.socket.emit('register', { id: this.state.id });
     }
 
     render() {
