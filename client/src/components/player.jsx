@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import ReactPlayer from 'react-player'
+import ReactPlayer from 'react-player';
+import { ListGroup } from 'react-bootstrap';
 import io from 'socket.io-client';
 
 // Todo:
 // * New joiners with changed URL not in sync
-// * Show other online room members
 
 class Player extends Component {
     socket = io();
@@ -14,7 +14,8 @@ class Player extends Component {
         url: 'https://www.youtube.com/watch?v=vNXuvGK8Wzc',
         playing: false,
         played: 0,
-        muted: true
+        muted: true,
+        roomies: {}
     }
 
     handlePlay = () => {
@@ -67,18 +68,35 @@ class Player extends Component {
             }
             this.setState(msg)
         });
+        this.socket.on('syncRoomies', msg => {
+            console.log('Roomies updated');
+            this.setState({ roomies: msg });
+        })
         this.socket.emit('register', { id: this.state.id });
     }
+
+    handleKeyUp = (event, fn) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            fn();
+        }
+    }
+
+    handleNameUpdate = () => this.socket.emit('syncRoomies', { id: this.state.id, name: this.userName.value });
+
+    handleLoadClick = () => this.setState({ url: this.urlInput.value, playing: false, played: 0 })
 
     render() {
         return (
             <div>
-                <h1 style={{ margin: '10px', 'text-align': 'center' }}>Watch Along</h1>
-                <h5 style={{ 'text-align': 'center' }}>{`Room #${this.state.id}`}</h5>
-                <h6 style={{ marginBottom: '20px', 'text-align': 'center' }}>Share this Room's # or the wepage's URL with friends to invite them over.</h6>
+                <h1 style={{ margin: '10px', 'textAlign': 'center' }}>Watch Along</h1>
+                <h5 style={{ 'textAlign': 'center' }}>{`Room #${this.state.id}`}</h5>
+                <h6 style={{ marginBottom: '20px', 'textAlign': 'center' }}>Share this Room's # or the wepage's URL with friends to invite them over.</h6>
                 <div className='controls'>
-                    <input ref={input => { this.urlInput = input }} type='text' defaultValue={this.state.url} size='100' />
-                    <button onClick={() => this.setState({ url: this.urlInput.value, playing: false, played: 0 })}>Load</button>
+                    <input ref={input => { this.userName = input }} onKeyUp={event => this.handleKeyUp(event, this.handleNameUpdate)} style={{ marginBottom: '10px' }} type='text' placeholder='Enter your name' size='20' />
+                    <br />
+                    <input ref={input => { this.urlInput = input }} onKeyUp={event => this.handleKeyUp(event, this.handleLoadClick)} type='text' defaultValue={this.state.url} size='100' />
+                    <button onClick={this.handleLoadClick}>Load</button>
                 </div>
                 <div className='player-wrapper'
                     style={{ margin: '10px' }}>
@@ -97,7 +115,11 @@ class Player extends Component {
                         controls={true}
                         url={this.state.url} />
                 </div>
-            </div>
+                <h5>Room Members</h5>
+                <ListGroup className='list-group'>
+                    {Object.keys(this.state.roomies).map(key => <ListGroup.Item key={key}>{this.state.roomies[key]}</ListGroup.Item>)}
+                </ListGroup>
+            </div >
         );
     }
 }

@@ -7,11 +7,17 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "dev",
-            "skipFiles": [
-                "<node_internals>/**"
+            "name": "Launch via NPM",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "dev"
             ],
-            "program": "${workspaceFolder}/src/index.js"
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceRoot}/dist/"
+            ],
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

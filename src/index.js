@@ -9,6 +9,7 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 let fileLoc = '';
 server.listen(port);
 let connectedRooms = {};
+console.log(`Using port ${port}`)
 
 if (process.env.NODE_ENV === 'production') fileLoc = path.join(__dirname = '../client/build/index.html');
 else fileLoc = path.join(__dirname, '../client/public/index.html');
@@ -29,8 +30,11 @@ io.on('connection', socket => {
 
         if (!(id in connectedRooms)) {
             connectedRooms[id] = {};
+            connectedRooms[id].roomies = {};
         }
+        connectedRooms[id].roomies[socket.id] = socket.id;
         socket.emit('sync', connectedRooms[id]);
+        io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);
         console.log('Registered')
     });
 
@@ -53,6 +57,13 @@ io.on('connection', socket => {
         connectedRooms[id].played = 0;
         connectedRooms[id].ts = (new Date()).getTime();
         socket.to(`Room #${id}`).emit('sync', connectedRooms[id]);
+    })
+
+    socket.on('syncRoomies', msg => {
+        const id = msg.id;
+        let roomies = connectedRooms[id].roomies;
+        roomies[socket.id] = msg.name;
+        io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);
     })
 
     socket.on('disconnect', () => {

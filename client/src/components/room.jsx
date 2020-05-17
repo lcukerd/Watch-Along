@@ -10,6 +10,13 @@ class Room extends Component {
         window.open(`${window.location.href}?id=${id}`, '_self');
     }
 
+    handleKeyUp = (event, fn) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            fn();
+        }
+    }
+
     render() {
         return (
             <Container className="align-items-center" style={{
@@ -36,7 +43,7 @@ class Room extends Component {
                             <Card.Body>
                                 <Card.Title>Join Room</Card.Title>
                                 <Card.Text>Enter your Room number below</Card.Text>
-                                <input placeholder='Room #' type='number' ref={input => { this.roomId = input }} />
+                                <input placeholder='Room #' type='number' ref={input => { this.roomId = input }} onKeyUp={event => this.handleKeyUp(event, () => this.enterRoom(this.roomId.value))} />
                                 <Button onClick={() => this.enterRoom(this.roomId.value)} style={{ backgroundColor: '#ba2d65', 'border-color': '#ba2d65', marginTop: '17px' }}>Let's go</Button>
                             </Card.Body>
                         </Card>
