@@ -42,9 +42,7 @@ io.on('connection', socket => {
             connectedRooms[id][key] = msg[key];
         }
         connectedRooms[id].ts = (new Date()).getTime();
-        // Don't sync url here
-        delete connectedRooms[id].url;
-        socket.to(`Room #${id}`).emit('sync', connectedRooms[id]);
+        socket.to(`Room #${id}`).emit('sync', Object.assign({ url: undefined }, connectedRooms[id]));
     });
 
     // Passively sync video url

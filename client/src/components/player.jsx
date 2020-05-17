@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import ReactPlayer from 'react-player'
 import io from 'socket.io-client';
 
+// Todo:
+// * New joiners with changed URL not in sync
+// * Add screen to create or join room
+// * Show room # and copy invite link
+// * Change app name and better UI
 class Player extends Component {
     socket = io();
     pullingSync = false;
@@ -40,13 +45,11 @@ class Player extends Component {
         this.player = player
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate = (prevProps, prevState) => {
         // Don't send data to server that is coming from server at the first place
         if (this.pullingSync) {
             this.pullingSync = false;
-            return
-        }
-        if (prevState.url && this.state.url !== prevState.url) {
+        } else if (prevState.url && this.state.url !== prevState.url) {
             console.log(`Syncing URL ${this.state.url}`)
             this.socket.emit('loadURL', { id: this.state.id, url: this.state.url });
         }
@@ -57,11 +60,11 @@ class Player extends Component {
             this.pullingSync = true;
             msg.played = msg.played + ((((new Date()).getTime()) - msg.ts) / 1000)
             console.log(`Pulling sync ${msg.played} and ${msg.playing}`)
-            if (Math.abs(this.state.played - msg.played) > 2) {
-                this.player.seekTo(parseFloat(msg.played))
-            }
             if (msg.url) {
                 this.urlInput.value = this.state.url;
+            }
+            if (Math.abs(this.state.played - msg.played) > 2) {
+                this.player.seekTo(parseFloat(msg.played))
             }
             this.setState(msg)
         });
