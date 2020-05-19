@@ -5,8 +5,6 @@ const io = require('socket.io')(server);
 const path = require('path');
 const port = process.env.PORT || 5000;
 
-//  Todo:
-//  Error handling and ask user to refresh in case of issue.
 
 app.use(express.static(path.join(__dirname, '../client/build')));
 let fileLoc = '';
