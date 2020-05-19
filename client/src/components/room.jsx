@@ -7,7 +7,7 @@ class Room extends Component {
     roomId = '';
 
     enterRoom = id => {
-        window.open(`${window.location.href}?id=${id}`, '_self');
+        window.open(`${window.location.href}room?id=${id}`, '_self');
     }
 
     handleKeyUp = (event, fn) => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactPlayer from 'react-player';
-import { ListGroup, Form, Navbar, Nav, FormControl, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { ListGroup, Form, Navbar, Nav, FormControl, Button, Tooltip, OverlayTrigger, Alert } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import io from 'socket.io-client';
 
 // Todo:
@@ -9,7 +10,7 @@ import io from 'socket.io-client';
 class Player extends Component {
     socket = io();
     pullingSync = false;
-    name = '';
+    name = this.props.name;
     state = {
         id: this.props.roomId,
         url: 'https://www.youtube.com/watch?v=vNXuvGK8Wzc',
@@ -17,7 +18,8 @@ class Player extends Component {
         played: 0,
         muted: true,
         editName: false,
-        roomies: {}
+        roomies: {},
+        serverInactive: false
     }
 
     handlePlay = () => {
@@ -58,7 +60,6 @@ class Player extends Component {
     }
 
     playerReady = () => {
-        this.name = this.socket.id;
         this.socket.on('sync', msg => {
             this.pullingSync = true;
             msg.played = msg.played + ((((new Date()).getTime()) - msg.ts) / 1000)
@@ -76,7 +77,13 @@ class Player extends Component {
             this.setState({ roomies: msg });
         })
         this.socket.emit('register', { id: this.state.id });
+        this.socket.on('connect_error', err => this.handleErrors());
+        this.socket.on('connect_failed', err => this.handleErrors());
+        this.socket.on('disconnect', err => this.handleErrors());
+        this.handleNameUpdate();
     }
+
+    handleErrors = () => this.setState({ serverInactive: true });
 
     handleOnSubmit = (event, fn) => {
         event.preventDefault();
@@ -99,11 +106,16 @@ class Player extends Component {
 
     handleNameUpdate = () => this.socket.emit('syncRoomies', { id: this.state.id, name: this.name });
 
-    handleLoadClick = () => this.setState({ url: this.urlInput.value, playing: false, played: 0 })
+    handleLoadClick = () => this.setState({ url: this.urlInput.value, playing: false, played: 0 });
+
+    showAlert = () => {
+        if (this.state.serverInactive) return <Alert variant='danger'>Server went inactive. Please refresh page.</Alert>
+    };
 
     render() {
         return (
             <div>
+                {this.showAlert()}
                 <Navbar bg="primary" variant="dark">
                     <Navbar.Brand>Watch Along</Navbar.Brand>
                     <Nav className="mr-auto">

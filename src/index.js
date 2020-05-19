@@ -60,26 +60,41 @@ io.on('connection', socket => {
 
     // Passively sync video url
     socket.on('loadURL', msg => {
-        const id = msg.id;
-        connectedRooms[id].url = msg.url;
-        connectedRooms[id].playing = false;
-        connectedRooms[id].played = 0;
-        connectedRooms[id].ts = (new Date()).getTime();
-        socket.to(`Room #${id}`).emit('sync', connectedRooms[id]);
+        try {
+            const id = msg.id;
+            connectedRooms[id].url = msg.url;
+            connectedRooms[id].playing = false;
+            connectedRooms[id].played = 0;
+            connectedRooms[id].ts = (new Date()).getTime();
+            socket.to(`Room #${id}`).emit('sync', connectedRooms[id]);
+        }
+        catch (err) {
+            console.log(`Server went inactive`)
+        }
     })
 
     socket.on('syncRoomies', msg => {
-        const id = msg.id;
-        let roomies = connectedRooms[id].roomies;
-        roomies[socket.id] = msg.name;
-        io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);
+        try {
+            const id = msg.id;
+            let roomies = connectedRooms[id].roomies;
+            roomies[socket.id] = msg.name;
+            io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);
+        }
+        catch (err) {
+            console.log(`Server went inactive`)
+        }
     })
 
     socket.on('disconnect', () => {
-        const id = mapSocket[socket.id];
-        let roomies = connectedRooms[id].roomies;
-        delete roomies[socket.id];
-        io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);
+        try {
+            const id = mapSocket[socket.id];
+            let roomies = connectedRooms[id].roomies;
+            delete roomies[socket.id];
+            io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);
+        }
+        catch (err) {
+            console.log(`Socket ${socket.id} not found`)
+        }
         console.log(`Disconnected with ${socket.id}`);
     })
 })
