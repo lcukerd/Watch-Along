@@ -13,7 +13,7 @@ class Player extends Component {
     name = this.props.name;
     state = {
         id: this.props.roomId,
-        url: 'https://www.youtube.com/watch?v=vNXuvGK8Wzc',
+        url: 'https://www.youtube.com/watch?v=xwLcB1QEPm4',
         playing: false,
         played: 0,
         muted: true,
