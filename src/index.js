@@ -12,6 +12,7 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 let fileLoc = '';
 server.listen(port);
 let connectedRooms = {};
+let mapSocket = {};
 console.log(`Using port ${port}`)
 
 if (process.env.NODE_ENV === 'production') fileLoc = path.join(__dirname = '../client/build/index.html');
@@ -30,6 +31,7 @@ io.on('connection', socket => {
         const id = msg.id;
         console.log(`Registering room #${id} for ${socket.id}`);
         socket.join(`Room #${id}`);
+        mapSocket[socket.id] = id;
 
         if (!(id in connectedRooms)) {
             connectedRooms[id] = {};
@@ -74,6 +76,10 @@ io.on('connection', socket => {
     })
 
     socket.on('disconnect', () => {
+        const id = mapSocket[socket.id];
+        let roomies = connectedRooms[id].roomies;
+        delete roomies[socket.id];
+        io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);
         console.log(`Disconnected with ${socket.id}`);
     })
 })
