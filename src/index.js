@@ -16,7 +16,7 @@ console.log(`Using port ${port}`)
 if (process.env.NODE_ENV === 'production') fileLoc = path.join(__dirname = '../client/build/index.html');
 else fileLoc = path.join(__dirname, '../client/public/index.html');
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(fileLoc);
 });
 
