@@ -14,7 +14,7 @@ It is still in the early stages so make sure to report any issues that you face.
 After cloning the repo and moving into the repo directory, perform below steps:
 * Install all npm dependencies `npm install` 
 * Move to client folder and install npm dependencies for client-side as well `npm install` 
-* Install concurrently to run react.js and node.js project together `npm i -g concurrently`
+* Install concurrently to run react.js and server project together `npm i -g concurrently`
 * Run the project using `npm run dev`
 
 ### Known Issues:
