@@ -61,7 +61,7 @@ class Room extends Component {
                                 <Card.Body>
                                     <Card.Title>Join Room</Card.Title>
                                     <Card.Text>Enter your Room number below</Card.Text>
-                                    <input placeholder='Room #' type='number' ref={input => { this.roomId = input }} onKeyUp={event => this.handleKeyUp(event, () => this.enterRoom(this.roomId.value))} />
+                                    <input placeholder='Room #' type='text' ref={input => { this.roomId = input }} onKeyUp={event => this.handleKeyUp(event, () => this.enterRoom(this.roomId.value))} />
                                     <Button onClick={() => this.enterRoom(this.roomId.value)} style={{ backgroundColor: '#ba2d65', 'border-color': '#ba2d65', marginTop: '17px' }}>Let's go</Button>
                                 </Card.Body>
                             </Card>

@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import io from 'socket.io-client';
 
 // Todo:
-// * New joiners with changed URL not in sync
+// * New joiners with changed URL not in sync.
 
 class Player extends Component {
     socket = io();
@@ -19,7 +19,8 @@ class Player extends Component {
         muted: true,
         editName: false,
         roomies: {},
-        serverInactive: false
+        serverInactive: false,
+        alerts: {}
     }
 
     handlePlay = () => {
@@ -83,7 +84,11 @@ class Player extends Component {
         this.handleNameUpdate();
     }
 
-    handleErrors = () => this.setState({ serverInactive: true });
+    handleErrors = () => {
+        let alert = this.state.alerts;
+        alert['sInactive'] = 'Server went inactive. Please refresh page.';
+        this.setState({ alerts: alert });
+    }
 
     handleOnSubmit = (event, fn) => {
         event.preventDefault();
@@ -106,10 +111,28 @@ class Player extends Component {
 
     handleNameUpdate = () => this.socket.emit('syncRoomies', { id: this.state.id, name: this.name });
 
-    handleLoadClick = () => this.setState({ url: this.urlInput.value, playing: false, played: 0 });
+    handleLoadClick = () => {
+        if (!ReactPlayer.canPlay(this.urlInput.value)) {
+            let alert = this.state.alerts;
+            alert['cantPlay'] = 'Might not be able to play video from given URL.';
+            this.setState({ alerts: alert });
+        }
+        this.setState({ url: this.urlInput.value, playing: false, played: 0 })
+    };
 
     showAlert = () => {
-        if (this.state.serverInactive) return <Alert variant='danger'>Server went inactive. Please refresh page.</Alert>
+        return Object.keys(this.state.alerts).map(key => {
+            const value = this.state.alerts[key];
+            return (
+                < Alert variant='danger' id={key} onClose={() => {
+                    let alert = this.state.alerts;
+                    delete alert[key];
+                    this.setState({ alerts: alert })
+                }} dismissible>
+                    {value}
+                </Alert >
+            )
+        })
     };
 
     render() {
@@ -117,7 +140,7 @@ class Player extends Component {
             <div>
                 {this.showAlert()}
                 <Navbar bg="primary" variant="dark">
-                    <Navbar.Brand>Watch Along</Navbar.Brand>
+                    <Navbar.Brand onClick={() => window.open(window.location.href.replace(`?id=${this.state.id}`, ''), '_self')}>Watch Along</Navbar.Brand>
                     <Nav className="mr-auto">
                         <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={props => <Tooltip id="button-tooltip" {...props}>Share this Room's # or the wepage's URL with friends to invite them over</Tooltip>}>
                             <Navbar.Text>
