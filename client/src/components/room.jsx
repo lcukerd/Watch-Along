@@ -21,7 +21,18 @@ class Room extends Component {
         return (
             <div>
                 <Navbar bg="primary" variant="dark">
-                    <Navbar.Brand>Watch Along</Navbar.Brand>
+                    <Container >
+                        <Navbar.Brand style={{ marginLeft: '20px' }}>
+                            <img
+                                alt=""
+                                src="/favicon.ico"
+                                width="30"
+                                height="30"
+                                className="d-inline-block align-top"
+                            />{'  '}
+                        Watch Along
+                        </Navbar.Brand>
+                    </Container>
                 </Navbar>
                 <Container className="align-items-center">
                     <Row style={{ margin: '10px' }}>

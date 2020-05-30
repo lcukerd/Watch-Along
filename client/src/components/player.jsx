@@ -6,6 +6,13 @@ import io from 'socket.io-client';
 
 // Todo:
 // * New joiners with changed URL not in sync.
+// * Add logo in tab
+// * Some extension support to minimise manual work
+// * Ping all roomies and check who all are connected
+// * Keep server alive when by making calls every 20min
+// * Add feature of adding video to queue
+// * Support for youtube playlists
+// * Move Brand Name to a bit center
 
 class Player extends Component {
     socket = io();
@@ -140,7 +147,16 @@ class Player extends Component {
             <div>
                 {this.showAlert()}
                 <Navbar bg="primary" variant="dark">
-                    <Navbar.Brand onClick={() => window.open(window.location.href.replace(`?id=${this.state.id}`, ''), '_self')}>Watch Along</Navbar.Brand>
+                    <Navbar.Brand onClick={() => window.open(window.location.href.replace(`?id=${this.state.id}`, ''), '_self')}>
+                        <img
+                            alt=""
+                            src="/favicon.ico"
+                            width="30"
+                            height="30"
+                            className="d-inline-block align-top"
+                        />{'  '}
+                        Watch Along
+                        </Navbar.Brand>
                     <Nav className="mr-auto">
                         <OverlayTrigger placement="right" delay={{ show: 250, hide: 400 }} overlay={props => <Tooltip id="button-tooltip" {...props}>Share this Room's # or the wepage's URL with friends to invite them over</Tooltip>}>
                             <Navbar.Text>

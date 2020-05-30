@@ -2,11 +2,13 @@ const express = require('express')
 const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+var favicon = require('serve-favicon');
 const path = require('path');
 const port = process.env.PORT || 5000;
 
 
 app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(favicon(path.join(__dirname, "../favicon.ico")));
 let fileLoc = '';
 server.listen(port);
 let connectedRooms = {};

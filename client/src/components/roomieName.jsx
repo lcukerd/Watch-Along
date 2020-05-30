@@ -27,9 +27,18 @@ class RoomieName extends Component {
             return (
                 <div>
                     <Navbar bg="primary" variant="dark">
-                        <Navbar.Brand>Watch Along</Navbar.Brand>
+                        <Navbar.Brand>
+                            <img
+                                alt=""
+                                src="/favicon.ico"
+                                width="30"
+                                height="30"
+                                className="d-inline-block align-top"
+                            />{'  '}
+                        Watch Along
+                        </Navbar.Brand>
                     </Navbar>
-                    <Card style={{ width: '18rem', margin: '20px', backgroundColor: '#f06292' }}>
+                    <Card style={{ width: '18rem', margin: '10px', backgroundColor: '#f06292' }}>
                         <Card.Body>
                             <Card.Title>Enter name</Card.Title>
                             <Card.Text>Enter your name below so that your friends can see who joined</Card.Text>
@@ -37,7 +46,7 @@ class RoomieName extends Component {
                             <Button onClick={() => this.enterRoom(this.name.value)} style={{ backgroundColor: '#ba2d65', 'border-color': '#ba2d65', marginTop: '17px' }}>Let's go</Button>
                         </Card.Body>
                     </Card>
-                </div>
+                </div >
             )
     }
 
