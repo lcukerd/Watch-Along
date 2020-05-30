@@ -4,15 +4,6 @@ import { ListGroup, Form, Navbar, Nav, FormControl, Button, Tooltip, OverlayTrig
 import 'bootstrap/dist/css/bootstrap.min.css';
 import io from 'socket.io-client';
 
-// Todo:
-// * New joiners with changed URL not in sync.
-// * Add logo in tab
-// * Some extension support to minimise manual work
-// * Ping all roomies and check who all are connected
-// * Keep server alive when by making calls every 20min
-// * Add feature of adding video to queue
-// * Support for youtube playlists
-// * Move Brand Name to a bit center
 
 class Player extends Component {
     socket = io();
