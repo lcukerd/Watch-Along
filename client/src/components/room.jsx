@@ -1,86 +1,86 @@
 import React, { Component } from 'react';
-import { Card, Button, Container, Row, Col, Navbar } from 'react-bootstrap';
+import { Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import io from 'socket.io-client';
+import NavigationBar from './navigationBar';
+import Player from './player';
+import MemberName from './memberName';
+import Queue from './queueList';
+import Members from './memberList';
+import store from './../store'
+import * as actions from './../actions'
 
 
 class Room extends Component {
-    roomId = '';
-
-    enterRoom = id => {
-        window.open(`${window.location.href}?id=${id}`, '_self');
+    socket = io();
+    state = {
+        memberName: '',
+        alerts: {}
     }
 
-    handleKeyUp = (event, fn) => {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            fn();
-        }
+    handleErrors = () => {
+        let alerts = store.getState().alerts;
+        alerts['sInactive'] = 'Server went inactive. Please refresh page.';
+        store.dispatch({ type: actions.UPDATE_ALERT, payload: { alerts } })
+    }
+
+    // Check whether alerts are dismissing or not
+    showAlert = () => {
+        const alerts = this.state.alerts;
+        store.dispatch({ type: actions.UPDATE_ALERT, payload: { alerts: undefined } })
+        return Object.keys(alerts).map(key => {
+            const value = alerts[key];
+            return (
+                < Alert variant='danger' dismissible>
+                    {value}
+                </Alert >
+            )
+        })
+    };
+
+    componentDidMount = () => {
+        store.dispatch({ type: actions.ADD_SOCKET, payload: { roomId: this.props.roomId, socket: this.socket } });
+        store.dispatch({ type: actions.UPDATE_CURR_URL, payload: { currUrl: 'https://www.youtube.com/watch?v=xwLcB1QEPm4', playing: false, played: 0 } })
+        store.subscribe(() => {
+            const sState = store.getState();
+            if (this.state.memberName !== sState.name) this.setState({ memberName: sState.name });
+            if (sState.alerts) this.state.showAlert = sState.alerts;
+        });
+
+        this.socket.on('sync', msg => {
+            let payload = {};
+            let action = actions.UPDATE_PLAYER_STATUS;
+            payload.played = msg.played + ((((new Date()).getTime()) - msg.ts) / 1000)
+            payload.playing = msg.playing;
+            if (msg.currUrl) {
+                payload.currUrl = msg.currUrl;
+                action = actions.UPDATE_CURR_URL;
+            }
+            store.dispatch({ type: action, payload });
+            console.log(`Pulling sync ${payload.played} and ${payload.playing}`)
+
+        });
+
+        this.socket.on('connect_error', err => this.handleErrors());
+        this.socket.on('connect_failed', err => this.handleErrors());
+        this.socket.on('disconnect', err => this.handleErrors());
     }
 
     render() {
         return (
             <div>
-                <Navbar bg="primary" variant="dark">
-                    <Container >
-                        <Navbar.Brand style={{ marginLeft: '20px' }}>
-                            <img
-                                alt=""
-                                src="../../favicon.ico"
-                                width="30"
-                                height="30"
-                                className="d-inline-block align-top"
-                            />{'  '}
-                        Watch Along
-                        </Navbar.Brand>
-                    </Container>
-                </Navbar>
-                <Container className="align-items-center">
-                    <Row style={{ margin: '10px' }}>
-                        <h2>
-                            Overview
-                        </h2>
-                        <p>
-                            Watch Along is a synchronized video viewing platform. A platform where users can create a room and watch videos with their friends in sync.
-                        </p>
-                        <p>
-                            Every member of the room can control the video and the platform ensures that everyone is watching the same part of the video at the same time. It's just as if you were watching together on a laptop.
-                        </p>
-                        <h3>
-                            How to use:
-                        </h3>
-                        <p>
-                            Create a room with some room id. Once you enter the room, share that room ID (or the full URL) with your friends.
-                            <br />
-                            The player supports following video types: YouTube, Facebook, Twitch, SoundCloud, Streamable, Vimeo, Wistia, Mixcloud, DailyMotion, and MP4 video URLs.
-                        </p>
-                    </Row>
-                    <Row style={{
-                        position: 'absolute',
-                        alignItems: 'center'
-                    }}>
-                        <Col>
-                            <Card style={{ width: '18rem', margin: '4px', backgroundColor: '#f06292' }}>
-                                <Card.Body>
-                                    <Card.Title>Create Room</Card.Title>
-                                    <Card.Text>Click below if you do not have a room number and would like to create a new room.</Card.Text>
-                                    <Button onClick={() => this.enterRoom(parseInt((new Date()).getTime() / 1000))} style={{ backgroundColor: '#ba2d65', 'border-color': '#ba2d65' }}>Let's go</Button >
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col>
-                            <Card style={{ width: '18rem', margin: '4px', backgroundColor: '#f06292' }}>
-                                <Card.Body>
-                                    <Card.Title>Join Room</Card.Title>
-                                    <Card.Text>Enter your Room number below</Card.Text>
-                                    <input placeholder='Room #' type='text' ref={input => { this.roomId = input }} onKeyUp={event => this.handleKeyUp(event, () => this.enterRoom(this.roomId.value))} />
-                                    <Button onClick={() => this.enterRoom(this.roomId.value)} style={{ backgroundColor: '#ba2d65', 'border-color': '#ba2d65', marginTop: '17px' }}>Let's go</Button>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Container>
+                <div className={this.state.memberName ? '' : 'bg-image'}>
+                    {this.showAlert()}
+                    <NavigationBar />
+                    <div className='player-wrapper' style={{ margin: '10px' }}>
+                        <Player roomId={this.props.roomId} />
+                        <Members />
+                        <Queue />
+                    </div>
+                </div >
+                {this.state.memberName ? '' : <MemberName />}
             </div>
-        )
+        );
     }
 }
 

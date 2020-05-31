@@ -16,11 +16,23 @@
       margin-top: 20px;
     }
 
-    .list-group {
+    .list-group1 {
       position: absolute;
       top: 0;
       right: 0;
       margin-top: 20px;
+      max-height: 300px;
+      margin-bottom: 10px;
+      overflow: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .list-group-queue {
+      position: absolute;
+      bottom: 0;
+      max-width: 100%;
+      overflow: scroll;
+      -webkit-overflow-scrolling: touch;
     }
 
     .controls {
@@ -28,11 +40,18 @@
       margin-left: 20px;
     }
 
-    .list-group {
-      max-height: 300px;
-      margin-bottom: 10px;
-      overflow: scroll;
-      -webkit-overflow-scrolling: touch;
+    .bg-image {
+      /* Add the blur effect */
+      filter: blur(8px);
+      -webkit-filter: blur(8px);
+
+      /* Full height */
+      height: 100%;
+
+      /* Center and scale the image nicely */
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
     }
   </style>
 </head>

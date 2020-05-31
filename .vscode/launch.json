@@ -13,11 +13,7 @@
                 "run",
                 "dev"
             ],
-            "sourceMaps": true,
-            "outFiles": [
-                "${workspaceRoot}/dist/"
-            ],
-            "cwd": "${workspaceFolder}"
+            "port": 5858
         }
     ]
 }

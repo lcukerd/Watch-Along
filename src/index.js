@@ -55,14 +55,14 @@ io.on('connection', socket => {
             console.log(err);
         }
         connectedRooms[id].ts = (new Date()).getTime();
-        socket.to(`Room #${id}`).emit('sync', Object.assign({ url: undefined }, connectedRooms[id]));
+        socket.to(`Room #${id}`).emit('sync', Object.assign({ currUrl: undefined }, connectedRooms[id]));
     });
 
     // Passively sync video url
     socket.on('loadURL', msg => {
         try {
             const id = msg.id;
-            connectedRooms[id].url = msg.url;
+            connectedRooms[id].currUrl = msg.currUrl;
             connectedRooms[id].playing = false;
             connectedRooms[id].played = 0;
             connectedRooms[id].ts = (new Date()).getTime();
