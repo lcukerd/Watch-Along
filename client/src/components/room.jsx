@@ -61,9 +61,13 @@ class Room extends Component {
                 <div className={this.state.memberName ? '' : 'bg-image'}>
                     {this.showAlert()}
                     <NavigationBar roomId={this.props.roomId} currUrl={this.state.currUrl} memberName={this.state.memberName} enterRoom={this.enterRoom} handleLoadClick={this.handleLoadClick} />
-                    <div className='player-wrapper' style={{ margin: '10px' }}>
-                        <Player roomId={this.props.roomId} playing={this.state.playing} played={this.state.played} currUrl={this.state.currUrl} getreference={this.ref} sync={this.sync} handleProgress={this.handleProgress} />
-                        <MemberList socket={this.socket} />
+                    <div className='row' style={{ margin: '5px' }}>
+                        <div className='player-wrapper col'>
+                            <Player roomId={this.props.roomId} playing={this.state.playing} played={this.state.played} currUrl={this.state.currUrl} getreference={this.ref} sync={this.sync} handleProgress={this.handleProgress} />
+                        </div>
+                        <MemberList className='col' socket={this.socket} />
+                    </div>
+                    <div style={{ margin: '5px' }}>
                         <Queue />
                     </div>
                 </div >

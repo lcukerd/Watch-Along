@@ -6,21 +6,20 @@
   <style>
     .player-wrapper {
       position: relative;
-      padding-top: 56.25%;
+      width: 80vw;
+      /* 80 / (16/9) */
+      height: 45vw;
     }
 
     .react-player {
       position: absolute;
       top: 0;
       left: 0;
-      margin-top: 20px;
+      margin-top: 5px;
     }
 
     .list-group1 {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin-top: 20px;
+      margin: 5px;
       max-height: 300px;
       margin-bottom: 10px;
       overflow: scroll;
@@ -28,8 +27,7 @@
     }
 
     .list-group-queue {
-      position: absolute;
-      bottom: 0;
+      margin-top: 10px;
       max-width: 100%;
       overflow: scroll;
       -webkit-overflow-scrolling: touch;

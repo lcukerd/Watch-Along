@@ -21,8 +21,8 @@ class Player extends Component {
             <ReactPlayer
                 className='react-player'
                 ref={player => { this.player = player; this.props.getreference(player); }}
-                width='70%'
-                height='70%'
+                width='100%'
+                height='100%'
                 playing={this.props.playing}
                 muted={true}
                 onProgress={this.props.handleProgress}
