@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { ListGroup } from 'react-bootstrap';
-import store from './../store'
 
-class Members extends Component {
+class MemberList extends Component {
     state = {
         roomies: {}
     }
 
     componentDidMount = () => {
-        // store.getState().socket.on('syncRoomies', msg => {
-        //     console.log('Roomies updated');
-        //     this.setState({ roomies: msg });
-        // })
+        this.props.socket.on('syncRoomies', msg => {
+            console.log('Roomies updated');
+            this.setState({ roomies: msg });
+        })
     }
 
     render() {
@@ -24,4 +23,4 @@ class Members extends Component {
     }
 }
 
-export default Members;
+export default MemberList;

@@ -45,8 +45,7 @@ io.on('connection', socket => {
 
     // Actively sync player status
     socket.on('sync', msg => {
-        const id = msg.id;
-        delete msg.id;
+        const id = mapSocket[socket.id]
         try {
             for (const key in msg) {
                 connectedRooms[id][key] = msg[key];
@@ -55,13 +54,13 @@ io.on('connection', socket => {
             console.log(err);
         }
         connectedRooms[id].ts = (new Date()).getTime();
-        socket.to(`Room #${id}`).emit('sync', Object.assign({ currUrl: undefined }, connectedRooms[id]));
+        socket.to(`Room #${id}`).emit('sync', Object.assign(connectedRooms[id]), { currUrl: undefined });
     });
 
     // Passively sync video url
     socket.on('loadURL', msg => {
         try {
-            const id = msg.id;
+            const id = mapSocket[socket.id]
             connectedRooms[id].currUrl = msg.currUrl;
             connectedRooms[id].playing = false;
             connectedRooms[id].played = 0;
@@ -75,7 +74,7 @@ io.on('connection', socket => {
 
     socket.on('syncRoomies', msg => {
         try {
-            const id = msg.id;
+            const id = mapSocket[socket.id]
             let roomies = connectedRooms[id].roomies;
             roomies[socket.id] = msg.name;
             io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);

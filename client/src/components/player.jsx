@@ -1,68 +1,35 @@
 import React, { Component } from 'react';
 import ReactPlayer from 'react-player';
-import store from './../store'
-import * as actions from './../actions'
 
 class Player extends Component {
-    pullingSync = false;
-    state = {
-        id: this.props.roomId,
-        currUrl: '',
-        playing: false,
-        played: 0,
-        muted: true,
-    }
-
     handlePlay = () => {
         console.log(`onPlay`)
-        if (this.state.playing === false) {
-            this.setState({ playing: true, played: this.player.getCurrentTime() }, () => this.sync())
+        if (this.props.playing === false) {
+            this.props.sync({ playing: true, played: this.player.getCurrentTime() })
         }
     }
 
     handlePause = () => {
         console.log('onPause')
-        if (this.state.playing === true) {
-            this.setState({ playing: false, played: this.player.getCurrentTime() }, () => this.sync())
+        if (this.props.playing === true) {
+            this.props.sync({ playing: false, played: this.player.getCurrentTime() })
         }
-    }
-
-    handleProgress = progress => {
-        this.setState({ played: progress.playedSeconds });
-    }
-
-    sync() {
-        console.log(`Syncing ${this.state.played}`)
-        store.getState().socket.emit('sync', this.state);
-    }
-
-    ref = player => {
-        this.player = player
-    }
-
-    componentDidMount = () => {
-        store.subscribe(() => {
-            const sState = store.getState();
-            console.log(`UPdating ${sState.playing}`);
-            if (Math.abs(this.state.played - sState.played) > 2) this.player.seekTo(parseFloat(sState.played));
-            this.setState({ currUrl: sState.currUrl, playing: sState.playing });
-        });
     }
 
     render() {
         return (
             <ReactPlayer
                 className='react-player'
-                ref={this.ref}
+                ref={player => { this.player = player; this.props.getreference(player); }}
                 width='70%'
                 height='70%'
-                playing={this.state.playing}
-                muted={this.state.muted}
-                onProgress={this.handleProgress}
+                playing={this.props.playing}
+                muted={true}
+                onProgress={this.props.handleProgress}
                 onPlay={this.handlePlay}
                 onPause={this.handlePause}
                 controls={true}
-                url={this.state.currUrl} />
+                url={this.props.currUrl} />
         );
     }
 
