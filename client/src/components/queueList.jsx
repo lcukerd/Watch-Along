@@ -1,19 +1,25 @@
 import React, { Component } from 'react';
-import { ListGroup, Card } from 'react-bootstrap';
-
+import { ListGroup } from 'react-bootstrap';
+import ReactPlayer from 'react-player';
 
 class Queue extends Component {
+
+    showQueue = () => {
+        return this.props.queueUrl.map((item, index) => {
+            return (
+                <ListGroup.Item style={{ padding: '2px' }}>
+                    <div className='player-wrapper-small' onClick={() => this.props.playMediafromQueue(index)}>
+                        <ReactPlayer style={{ position: 'absolute', top: 0, left: 0, 'pointer-events': 'none' }} width='100%' height='100%' url={item} />
+                    </div>
+                </ListGroup.Item >
+            )
+        });
+    };
+
     render() {
         return (
             <ListGroup className='list-group-queue' horizontal>
-                <ListGroup.Item>
-                    <Card style={{ width: '18rem', heigh: '18rem' }}>
-                        <Card.Img variant="top" src="holder.js/100px180" />
-                        <Card.Body>
-                            <Card.Title>Card Title</Card.Title>
-                        </Card.Body>
-                    </Card>
-                </ListGroup.Item>
+                {this.showQueue()}
             </ListGroup>
         );
     }

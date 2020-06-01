@@ -28,6 +28,7 @@ class Player extends Component {
                 onProgress={this.props.handleProgress}
                 onPlay={this.handlePlay}
                 onPause={this.handlePause}
+                onEnded={this.props.handleVideoEnded}
                 onReady={this.props.playerReady}
                 controls={true}
                 url={this.props.currUrl} />

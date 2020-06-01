@@ -67,7 +67,8 @@ io.on('connection', socket => {
         try {
             const id = mapSocket[socket.id]
             connectedRooms[id].currUrl = msg.currUrl;
-            connectedRooms[id].playing = false;
+            if (msg.playing) connectedRooms[id].playing = msg.playing;
+            else connectedRooms[id].playing = false;
             connectedRooms[id].played = 0;
             connectedRooms[id].playlistIndex = -1;
             connectedRooms[id].ts = (new Date()).getTime();
@@ -85,6 +86,18 @@ io.on('connection', socket => {
             let roomies = connectedRooms[id].roomies;
             roomies[socket.id] = msg.name;
             io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);
+        }
+        catch (err) {
+            console.log(`Server went inactive`)
+        }
+    })
+
+    socket.on('syncQueue', msg => {
+        try {
+            console.log(msg.queue.length)
+            const id = mapSocket[socket.id]
+            connectedRooms[id].queue = msg.queue;
+            io.in(`Room #${id}`).emit('syncQueue', connectedRooms[id]);
         }
         catch (err) {
             console.log(`Server went inactive`)

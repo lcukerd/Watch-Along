@@ -18,9 +18,8 @@ After cloning the repo and moving into the repo directory, perform below steps:
 * Run the project using `npm run dev`
 
 ### Known Issues:
+* Video sometimes pauses just after playing
 * New joinees will not point to correct video in playlist
 
 ### Todo:
-* Add feature of adding video to queue
-* Ping all roomies and check who all are connected
 * Some extension support to minimise manual work of pasting URL
