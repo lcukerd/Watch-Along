@@ -16,7 +16,7 @@ class MemberList extends Component {
     render() {
         return (
             <ListGroup className='list-group1'>
-                <ListGroup.Item><h5>Room Members</h5></ListGroup.Item>
+                <ListGroup.Item onClick={() => this.props.socket.emit('pingCheck')}><h5>Room Members</h5></ListGroup.Item>
                 {Object.keys(this.state.roomies).map(key => <ListGroup.Item key={key}>{this.state.roomies[key]}</ListGroup.Item>)}
             </ListGroup>
         );

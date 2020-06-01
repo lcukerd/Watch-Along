@@ -81,9 +81,22 @@ io.on('connection', socket => {
     socket.on('syncRoomies', msg => {
         try {
             const id = mapSocket[socket.id]
+            if (!connectedRooms[id].roomies) connectedRooms[id].roomies = {};
             let roomies = connectedRooms[id].roomies;
             roomies[socket.id] = msg.name;
             io.in(`Room #${id}`).emit('syncRoomies', connectedRooms[id].roomies);
+        }
+        catch (err) {
+            console.log(`Server went inactive`)
+        }
+    })
+
+    socket.on('pingCheck', msg => {
+        try {
+            console.log('Performing Ping Check for all Roomies');
+            const id = mapSocket[socket.id]
+            delete connectedRooms[id].roomies;
+            io.in(`Room #${id}`).emit('pingCheck');
         }
         catch (err) {
             console.log(`Server went inactive`)

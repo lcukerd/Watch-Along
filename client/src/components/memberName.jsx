@@ -17,7 +17,7 @@ class MemberName extends Component {
                     <Card.Title>Enter name</Card.Title>
                     <Card.Text>Enter your name below so that your friends can see who joined</Card.Text>
                     <input placeholder='Name' type='text' ref={input => { this.name = input }} onKeyUp={event => this.handleKeyUp(event, () => this.props.enterRoom(this.name.value))} />
-                    <Button onClick={() => this.enterRoom(this.name.value)} style={{ backgroundColor: '#ba2d65', 'border-color': '#ba2d65', marginTop: '17px' }}>Let's go</Button>
+                    <Button onClick={() => this.props.enterRoom(this.name.value)} style={{ backgroundColor: '#ba2d65', 'border-color': '#ba2d65', marginTop: '17px' }}>Let's go</Button>
                 </Card.Body>
             </Card>
         );

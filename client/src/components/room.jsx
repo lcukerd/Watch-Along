@@ -56,6 +56,8 @@ class Room extends Component {
             this.setState(msg);
         });
 
+        this.socket.on('pingCheck', msg => this.socket.emit('syncRoomies', { name: this.state.memberName }));
+
         this.socket.on('connect_error', err => this.handleErrors());
         this.socket.on('connect_failed', err => this.handleErrors());
         this.socket.on('disconnect', err => this.handleErrors());
