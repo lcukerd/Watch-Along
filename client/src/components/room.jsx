@@ -59,7 +59,7 @@ class Room extends Component {
         this.socket.on('connect_error', err => this.handleErrors());
         this.socket.on('connect_failed', err => this.handleErrors());
         this.socket.on('disconnect', err => this.handleErrors());
-        setInterval(() => https.get(`stayUp`), 5 * 60 * 1000);
+        setInterval(() => https.get(`stayUp`), 60 * 1000);
 
     }
 
