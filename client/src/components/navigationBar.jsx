@@ -44,7 +44,7 @@ class NavigationBar extends Component {
                 </Nav>
                 <Navbar.Collapse className="justify-content-end">
                     <Form inline style={{ marginRight: '10px', width: '35rem' }} onSubmit={event => this.handleOnSubmit(event, () => this.props.handleLoadClick(this.urlInput.value))}>
-                        <FormControl style={{ width: '30rem' }} type="text" placeholder="Enter Url" className="mr-sm-2" ref={input => { this.urlInput = input }} defaultValue={this.props.currUrl} />
+                        <FormControl style={{ width: '30rem' }} type="text" placeholder="Enter Url" className="mr-sm-2" ref={input => { this.urlInput = input; this.props.refUrlInput(input); }} defaultValue={this.props.currUrl} />
                         <Button variant="outline-light" onClick={() => this.props.handleLoadClick(this.urlInput.value)}>Load</Button>
                     </Form>
                     <OverlayTrigger placement="bottom" overlay={props => <Tooltip id="button-tooltip" {...props}>Click to edit name</Tooltip>}>

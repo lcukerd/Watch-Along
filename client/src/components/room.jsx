@@ -50,6 +50,9 @@ class Room extends Component {
             // New joinees will not point to correct video in playlist
             if (this.player.getInternalPlayer() && this.player.getInternalPlayer().getPlaylistIndex() !== msg.playlistIndex) this.player.getInternalPlayer().playVideoAt(msg.playlistIndex);
             if (Math.abs(this.state.played - msg.played) > 2) this.player.seekTo(parseFloat(msg.played));
+            if (msg.currUrl) {
+                this.urlInput.value = msg.currUrl;
+            }
             this.setState(msg);
         });
 
@@ -65,10 +68,10 @@ class Room extends Component {
             <div>
                 <div className={this.state.memberName ? '' : 'bg-image'}>
                     {this.showAlert()}
-                    <NavigationBar roomId={this.props.roomId} currUrl={this.state.currUrl} memberName={this.state.memberName} enterRoom={this.enterRoom} handleLoadClick={this.handleLoadClick} />
+                    <NavigationBar roomId={this.props.roomId} currUrl={this.state.currUrl} memberName={this.state.memberName} enterRoom={this.enterRoom} handleLoadClick={this.handleLoadClick} refUrlInput={this.refUrlInput} />
                     <div className='row' style={{ margin: '5px' }}>
                         <div className='player-wrapper col'>
-                            <Player roomId={this.props.roomId} playing={this.state.playing} played={this.state.played} currUrl={this.state.currUrl} playerReady={this.playerReady} getreference={this.ref} sync={this.sync} handleProgress={this.handleProgress} />
+                            <Player roomId={this.props.roomId} playing={this.state.playing} played={this.state.played} currUrl={this.state.currUrl} playerReady={this.playerReady} getreference={this.refPlayer} sync={this.sync} handleProgress={this.handleProgress} />
                         </div>
                         <MemberList className='col' socket={this.socket} />
                     </div>
@@ -98,7 +101,8 @@ class Room extends Component {
         this.socket.emit('loadURL', { currUrl: url });
     };
 
-    ref = player => this.player = player;
+    refPlayer = player => this.player = player;
+    refUrlInput = urlInput => this.urlInput = urlInput;
 
     handleProgress = progress => {
         this.setState({ played: progress.playedSeconds });
