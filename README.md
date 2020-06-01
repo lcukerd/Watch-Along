@@ -18,11 +18,9 @@ After cloning the repo and moving into the repo directory, perform below steps:
 * Run the project using `npm run dev`
 
 ### Known Issues:
-* New joiners with changed URL not in sync.
+* New joinees will not point to correct video in playlist
 
 ### Todo:
-* Keep server alive when by making calls every 20min
 * Add feature of adding video to queue
-* Support for youtube playlists
 * Ping all roomies and check who all are connected
 * Some extension support to minimise manual work of pasting URL

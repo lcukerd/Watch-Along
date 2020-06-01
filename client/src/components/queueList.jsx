@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListGroup, Form, Navbar, Nav, FormControl, Button, Tooltip, OverlayTrigger, Alert, Card } from 'react-bootstrap';
+import { ListGroup, Card } from 'react-bootstrap';
 
 
 class Queue extends Component {

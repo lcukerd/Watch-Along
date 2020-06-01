@@ -5,14 +5,14 @@ class Player extends Component {
     handlePlay = () => {
         console.log(`onPlay`)
         if (this.props.playing === false) {
-            this.props.sync({ playing: true, played: this.player.getCurrentTime() })
+            this.props.sync({ playing: true, played: this.player.getCurrentTime(), playlistIndex: this.player.getInternalPlayer().getPlaylistIndex() })
         }
     }
 
     handlePause = () => {
         console.log('onPause')
         if (this.props.playing === true) {
-            this.props.sync({ playing: false, played: this.player.getCurrentTime() })
+            this.props.sync({ playing: false, played: this.player.getCurrentTime(), playlistIndex: this.player.getInternalPlayer().getPlaylistIndex() })
         }
     }
 
@@ -28,6 +28,7 @@ class Player extends Component {
                 onProgress={this.props.handleProgress}
                 onPlay={this.handlePlay}
                 onPause={this.handlePause}
+                onReady={this.props.playerReady}
                 controls={true}
                 url={this.props.currUrl} />
         );

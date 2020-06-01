@@ -8,7 +8,7 @@ import Player from './player';
 import MemberName from './memberName';
 import Queue from './queueList';
 import MemberList from './memberList';
-
+import https from 'https';
 
 class Room extends Component {
     socket = io();
@@ -17,6 +17,7 @@ class Room extends Component {
         playing: false,
         played: 0,
         currUrl: 'https://www.youtube.com/watch?v=xwLcB1QEPm4',
+        playlistIndex: -1,
         alerts: {}
     }
 
@@ -46,6 +47,8 @@ class Room extends Component {
 
         this.socket.on('sync', msg => {
             msg.played = msg.played + ((((new Date()).getTime()) - msg.ts) / 1000)
+            // New joinees will not point to correct video in playlist
+            if (this.player.getInternalPlayer() && this.player.getInternalPlayer().getPlaylistIndex() !== msg.playlistIndex) this.player.getInternalPlayer().playVideoAt(msg.playlistIndex);
             if (Math.abs(this.state.played - msg.played) > 2) this.player.seekTo(parseFloat(msg.played));
             this.setState(msg);
         });
@@ -53,6 +56,8 @@ class Room extends Component {
         this.socket.on('connect_error', err => this.handleErrors());
         this.socket.on('connect_failed', err => this.handleErrors());
         this.socket.on('disconnect', err => this.handleErrors());
+        setInterval(() => https.get(`stayUp`), 20 * 60 * 1000);
+
     }
 
     render() {
@@ -63,13 +68,13 @@ class Room extends Component {
                     <NavigationBar roomId={this.props.roomId} currUrl={this.state.currUrl} memberName={this.state.memberName} enterRoom={this.enterRoom} handleLoadClick={this.handleLoadClick} />
                     <div className='row' style={{ margin: '5px' }}>
                         <div className='player-wrapper col'>
-                            <Player roomId={this.props.roomId} playing={this.state.playing} played={this.state.played} currUrl={this.state.currUrl} getreference={this.ref} sync={this.sync} handleProgress={this.handleProgress} />
+                            <Player roomId={this.props.roomId} playing={this.state.playing} played={this.state.played} currUrl={this.state.currUrl} playerReady={this.playerReady} getreference={this.ref} sync={this.sync} handleProgress={this.handleProgress} />
                         </div>
                         <MemberList className='col' socket={this.socket} />
                     </div>
-                    <div style={{ margin: '5px' }}>
+                    {/* <div style={{ margin: '5px' }}>
                         <Queue />
-                    </div>
+                    </div> */}
                 </div >
                 {this.state.memberName ? '' : <MemberName enterRoom={this.enterRoom} />}
             </div>

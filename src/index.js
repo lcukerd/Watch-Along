@@ -22,6 +22,11 @@ app.get('/', (req, res) => {
     res.sendFile(fileLoc);
 });
 
+app.get('/stayUp', (req, res) => {
+    console.log('Kept Active by user')
+    res.send('I am Up!');
+});
+
 io.on('connection', socket => {
     console.log('Got a new connection');
 
@@ -64,6 +69,7 @@ io.on('connection', socket => {
             connectedRooms[id].currUrl = msg.currUrl;
             connectedRooms[id].playing = false;
             connectedRooms[id].played = 0;
+            connectedRooms[id].playlistIndex = -1;
             connectedRooms[id].ts = (new Date()).getTime();
             socket.to(`Room #${id}`).emit('sync', connectedRooms[id]);
         }
