@@ -55,7 +55,11 @@ class Room extends Component {
         this.socket.on('sync', msg => {
             msg.played = msg.played + ((((new Date()).getTime()) - msg.ts) / 1000)
             // New joinees will not point to correct video in playlist
-            // if (this.player.getInternalPlayer() && this.player.getInternalPlayer().getPlaylistIndex() !== msg.playlistIndex && msg.playlistIndex !== -1) this.player.getInternalPlayer().playVideoAt(msg.playlistIndex);
+            try {
+                if (this.player.getInternalPlayer() && this.player.getInternalPlayer().getPlaylistIndex() !== msg.playlistIndex && msg.playlistIndex !== -1) this.player.getInternalPlayer().playVideoAt(msg.playlistIndex);
+            } catch (err) {
+                console.log(`Internal Player Error ${err.stack}`)
+            }
             if (Math.abs(this.state.played - msg.played) > 2) this.player.seekTo(parseFloat(msg.played));
             if (msg.currUrl) {
                 this.urlInput.value = msg.currUrl;
