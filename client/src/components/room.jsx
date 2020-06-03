@@ -91,7 +91,7 @@ class Room extends Component {
                         <MemberList className='col' socket={this.socket} />
                     </div>
                     <div style={{ margin: '5px' }}>
-                        <Queue queueUrl={this.state.queue} playMediafromQueue={this.playMediafromQueue} />
+                        <Queue queueUrl={this.state.queue} playMediafromQueue={this.playMediafromQueue} handleRemovedfromQueue={this.handleRemovedfromQueue} />
                     </div>
                 </div >
                 {this.state.memberName ? '' : <MemberName enterRoom={this.enterRoom} />}
@@ -147,6 +147,12 @@ class Room extends Component {
         console.log(index);
         this.socket.emit('loadURL', { currUrl: this.state.queue[index], playing: true });
         this.setState({ currUrl: this.state.queue[index], playing: true, played: 0 })
+    }
+
+    handleRemovedfromQueue = index => {
+        let q = this.state.queue;
+        q.splice(index, 1);
+        this.socket.emit('syncQueue', { queue: q });
     }
 
     sync = status => {

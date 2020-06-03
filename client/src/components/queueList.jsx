@@ -8,7 +8,7 @@ class Queue extends Component {
         return this.props.queueUrl.map((item, index) => {
             return (
                 <ListGroup.Item style={{ padding: '2px' }}>
-                    <div className='player-wrapper-small' onClick={() => this.props.playMediafromQueue(index)}>
+                    <div className='player-wrapper-small' onClick={() => this.props.playMediafromQueue(index)} onDoubleClick={() => this.props.handleRemovedfromQueue(index)}>
                         <ReactPlayer style={{ position: 'absolute', top: 0, left: 0, 'pointer-events': 'none' }} width='100%' height='100%' url={item} />
                     </div>
                 </ListGroup.Item >
